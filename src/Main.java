@@ -2,33 +2,36 @@
 
 import domain.Electronics;
 import domain.Food;
-import domain.Item;
 import operations.ExportAuditVisitor;
+import operations.JsonExportVisitor;
 import operations.TaxVisitor;
-import operations.Visitor;
-
-import java.util.List;
+import domain.Cart;
 
 public class Main {
     public static void main(String[] args) {
-        List<Item> items = List.of(
-                new Electronics("MacBook Pro", 2500.0),
-                new Electronics("iPhone 15", 1000.0),
-                new Food(1200.0, 2.5),
-                new Food(50.0, 10.0)
-        );
+        Cart cart = new Cart();
+        cart.addItem(new Electronics("MacBook Pro", 2500.0));
+        cart.addItem(new Electronics("iPhone 15", 1000.0));
+        cart.addItem(new Food(2.5, 10.0));
+        cart.addItem(new Food(0.5, 50.0));
 
-        Visitor taxVisitor = new TaxVisitor();
-        Visitor auditVisitor = new ExportAuditVisitor();
+        System.out.println("=== ТЕСТ: VISITOR\n");
 
-        for (Item item : items) {
-            item.accept(taxVisitor);
-        }
+        // 2. Тест 1: Export у JSON, додавання формат виводу без зміни класів домену
+        System.out.println("--- Експорт структури в JSON");
+        cart.applyVisitor(new JsonExportVisitor());
+        System.out.println("------------------------------------");
 
-        System.out.println("\n");
+        // 3. Тест 2: Логіка з накопиченням стану, Збір даних з усієї структури
+        System.out.println("--- Розрахунок податків/Stateful Visitor");
+        TaxVisitor taxCalc = new TaxVisitor();
+        cart.applyVisitor(taxCalc);
+        System.out.println(STR."SUM: \{taxCalc.getTotalTax()}");
+        System.out.println("------------------------------------");
 
-        for (Item item : items) {
-            item.accept(auditVisitor);
-        }
+        // 4. Тест 3: Singleton Visitor
+        System.out.println("--- Перевірка безпеки експорту ---");
+        cart.applyVisitor(ExportAuditVisitor.INSTANCE);
+        System.out.println("------------------------------------");
     }
 }

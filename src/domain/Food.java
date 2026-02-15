@@ -2,17 +2,15 @@ package domain;
 
 import operations.Visitor;
 
-public class Food implements Item {
-    private double weight;
-    private double pricePerKg;
+public class Food extends AbstractItem {
+    private final double weight;
 
     public Food(double weight, double pricePerKg) {
+        super(pricePerKg);
         this.weight = weight;
-        this.pricePerKg = pricePerKg;
     }
 
     public double getWeight() { return weight; }
-    public double getPricePerKg() { return pricePerKg; }
 
     @Override
     public void accept(Visitor visitor) {

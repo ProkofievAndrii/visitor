@@ -3,29 +3,26 @@ package operations;
 import domain.Electronics;
 import domain.Food;
 
-/**
- * Конкретный посетитель, реализующий аудит товаров перед экспортом.
- * Позволяет добавить логику проверки без изменения классов Electronics и Food.
- */
-public class ExportAuditVisitor implements Visitor {
+public enum ExportAuditVisitor implements Visitor {
+    INSTANCE;
 
     @Override
     public void visit(Electronics electronics) {
-        System.out.println("--- Аудит электроники ---");
+        System.out.println("--- Аудит экспорту электроніки");
         if (electronics.getModel().toLowerCase().contains("pro")) {
-            System.out.println(STR."Модель \{electronics.getModel()}: Требуется расширенная лицензия.");
+            System.out.println(STR."Модель \{electronics.getModel()}: Примітка: pro.");
         } else {
-            System.out.println(STR."Модель \{electronics.getModel()}: Проверка пройдена.");
+            System.out.println(STR."Модель \{electronics.getModel()}: Примітка відсутня.");
         }
     }
 
     @Override
     public void visit(Food food) {
-        System.out.println("--- Аудит продуктов питания ---");
+        System.out.println("--- Аудит экспорту продуктів ---");
         if (food.getWeight() > 1000) {
-            System.out.println(STR."Вес \{food.getWeight()} кг: Необходим фитосанитарный контроль.");
+            System.out.println(STR."Вес \{food.getWeight()}кг: Перевищено ліміт ваги.");
         } else {
-            System.out.println(STR."Вес \{food.getWeight()} кг: Партия одобрена к вывозу.");
+            System.out.println("Успіх.");
         }
     }
 }
