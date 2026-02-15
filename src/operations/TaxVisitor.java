@@ -3,7 +3,6 @@ package operations;
 import domain.Electronics;
 import domain.Food;
 
-
 public class TaxVisitor implements Visitor {
     private double totalTax = 0;
 
